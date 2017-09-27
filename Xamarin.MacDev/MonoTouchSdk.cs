@@ -302,6 +302,53 @@ namespace Xamarin.MacDev
 			}
 		}
 
+		public string GetDTXcode ()
+		{
+			PDictionary xcodeData;
+			PString dtXcode;
+			if (versions.TryGetValue ("XcodeData", out xcodeData) && xcodeData.TryGetValue ("DTXcode", out dtXcode))
+				return dtXcode?.Value;
+
+			return null;
+		}
+
+		public string GetDTXcodeBuild ()
+		{
+			PDictionary xcodeData;
+			PString dtXcode;
+			if (versions.TryGetValue ("XcodeData", out xcodeData) && xcodeData.TryGetValue ("DTXcodeBuild", out dtXcode))
+				return dtXcode?.Value;
+
+			return null;
+		}
+
+		string GetPlatformValue (PlatformName platform, string key)
+		{
+			PDictionary xcodeData;
+			PDictionary platformData;
+			PString value;
+
+			if (versions.TryGetValue ("XcodeData", out xcodeData) && xcodeData.TryGetValue (GetPlatformKey (platform), out platformData) && platformData.TryGetValue (key, out value))
+				return value?.Value;
+			
+			return null;
+		}
+
+		public string GetDTPlatformBuild (AppleSdk sdk, PlatformName platform)
+		{
+			return GetPlatformValue (platform, "DTPlatformBuild");
+		}
+
+		public string GetDTSDKName (AppleDTSdkSettings sdk, PlatformName platform)
+		{
+			return GetPlatformValue (platform, "DTSDKName");
+		}
+
+		public string GetDTPlatformVersion (AppleSdk sdk, PlatformName platform)
+		{
+			return GetPlatformValue (platform, "DTPlatformVersion");
+		}
+
 		public IList<IPhoneSdkVersion> GetKnownSdkVersions (PlatformName platform)
 		{
 			var list = new List<IPhoneSdkVersion> ();
